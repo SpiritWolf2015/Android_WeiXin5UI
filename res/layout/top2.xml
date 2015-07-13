@@ -55,9 +55,10 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- 指示线点9图片 -->
     <ImageView
-        android:id="@+id/id_iv_tabline"
-        android:layout_width="100dp"
+        android:id="@+id/id_iv_tabline"        
+        android:layout_width="0dp"
         android:layout_height="3dp"
         android:background="@drawable/tabline" />
 

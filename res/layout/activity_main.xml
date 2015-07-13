@@ -7,6 +7,7 @@
     <include layout="@layout/top1"/>
     <include layout="@layout/top2"/>
     
+    <!-- 注意这个组件是用来显示左右滑动的界面，如果不加载XML布局文件，他是不会显示内容的。 -->
     <android.support.v4.view.ViewPager
         android:id="@+id/id_viewpager"
         android:layout_width="match_parent"
