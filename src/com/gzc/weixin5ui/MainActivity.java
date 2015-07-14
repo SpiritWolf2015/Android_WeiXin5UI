@@ -3,6 +3,8 @@ package com.gzc.weixin5ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jauker.widget.BadgeView;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -33,10 +36,17 @@ public class MainActivity extends FragmentActivity {
 	private ImageView mTabLine = null;
 	/** 屏幕三分之1宽度 */
 	private int mScreen1_3;
+	private int mSceen;
+	
+	BadgeView mBadgeView = null;
+	LinearLayout mLinearLayout = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
+		
+		//去掉ActionBar，一定要放在setContentView函数前面执行，否则报错。
+		requestWindowFeature(Window.FEATURE_NO_TITLE);		
 		setContentView(R.layout.activity_main);
 
 		initTabLine();
@@ -51,6 +61,7 @@ public class MainActivity extends FragmentActivity {
 		display.getMetrics(outMetrics);
 		// 得到屏幕宽度的三分之1
 		mScreen1_3 = outMetrics.widthPixels / 3;
+		mSceen = outMetrics.widthPixels;
 
 		android.view.ViewGroup.LayoutParams lp = mTabLine.getLayoutParams();
 		lp.width = mScreen1_3;
@@ -60,6 +71,9 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void initView() {
+		
+		mLinearLayout = (LinearLayout)findViewById(R.id.id_ll_chat);
+		
 		mTextView1 = (TextView) findViewById(R.id.id_tv_chat);
 		mTextView2 = (TextView) findViewById(R.id.id_tv_friend);
 		mTextView3 = (TextView) findViewById(R.id.id_tv_contact);
@@ -97,6 +111,14 @@ public class MainActivity extends FragmentActivity {
 
 				switch (position) {
 				case 0:
+					if(null != mBadgeView){
+						mLinearLayout.removeView(mBadgeView);
+					}
+					mBadgeView = new BadgeView(MainActivity.this);
+					// 设置提示数量
+					mBadgeView.setBadgeCount(48);
+					mLinearLayout.addView(mBadgeView);
+					
 					// 滑动到这个页面，改变字体颜色。
 					mTextView1.setTextColor(Color.parseColor(CHANGE_COLOR));
 					break;
@@ -112,7 +134,7 @@ public class MainActivity extends FragmentActivity {
 			}
 
 			@Override
-			public void onPageScrollStateChanged(int arg0) {
+			public void onPageScrollStateChanged(int state) {
 				// TODO 自动生成的方法存根
 
 			}
@@ -123,10 +145,12 @@ public class MainActivity extends FragmentActivity {
 
 				LinearLayout.LayoutParams lp = (LayoutParams) mTabLine
 						.getLayoutParams();
-//				if (positionOffset > 0) {
+
 					lp.leftMargin = (int) (positionOffset * mScreen1_3 + position
 							* mScreen1_3);
-//				}
+//				lp.leftMargin = (int)((position + positionOffset) * mSceen);
+				Log.i("onPageScrolled", "leftMargin = "+lp.leftMargin);
+				
 				mTabLine.setLayoutParams(lp);
 			}
 		});
